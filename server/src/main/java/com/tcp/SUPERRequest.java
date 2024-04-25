@@ -2,6 +2,7 @@ package com.tcp;
 
 public class SUPERRequest {
 
+    private String endPointName;
     private int requestType = -1;
     private String requestBody;
 
@@ -12,16 +13,21 @@ public class SUPERRequest {
     public void parse(String requestContent){
         String[] split = requestContent.split(";");
 
-        if(!split[0].equals("0") && !split[0].equals("1")){
-            System.out.println("Invalid start character");
+        endPointName = split[0];
+
+        if(!split[1].equals("0") && !split[1].equals("1")){
             return;
         }
 
-        requestType = Integer.parseInt(split[0]);
+        requestType = Integer.parseInt(split[1]);
 
-        requestBody = split[1];
+        requestBody = split[2];
     }
 
+    public String getEndPointName(){
+        return endPointName;
+    }
+    
     public int getRequestType(){
         return requestType;
     }

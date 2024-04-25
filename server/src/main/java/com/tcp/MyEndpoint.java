@@ -1,13 +1,13 @@
 package com.tcp;
 
-public class MyHandler implements SUPERHandler {
+public class MyEndpoint implements SUPEREndpoint {
     @Override
     public String get(String requestBody) {
         boolean val = requestBody.equals("correct");
         if(val){
-            return "2;Get function: (" + requestBody + ");";
+            return "2;Successful get";
         } else {
-            return "3;Get function: (" + requestBody + ");";
+            return "3;Failed get";
         }
     }
 
@@ -15,9 +15,9 @@ public class MyHandler implements SUPERHandler {
     public String post(String requestBody) {
         boolean val = requestBody.equals("correct");
         if(val){
-            return "2;Post function: (" + requestBody + ");";
+            return "2;Successful post";
         } else {
-            return "3;Post function: (" + requestBody + ");";
+            return "3;Failed post";
         }
     }
 }

@@ -13,7 +13,7 @@ public class SUPERResponse {
 
         String[] split = responseContent.split(";");
 
-        if(!split[0].equals("2") && !split[0].equals("3")){
+        if(!split[0].equals("2") && !split[0].equals("3") && !split[0].equals("-1")){
             System.out.println("Invalid start character");
             return;
         }

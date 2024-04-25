@@ -8,17 +8,17 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 public class SUPERServer {
 
-    SUPERHandler handler;
+    HashMap<String, SUPEREndpoint> endPoints = new HashMap<>();
 
     public void open(int port) throws IOException{
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
- 
             System.out.println("Server is listening on port " + port);
- 
+
             while (true) {
                 Socket socket = serverSocket.accept();
  
@@ -32,22 +32,32 @@ public class SUPERServer {
 
                 SUPERRequest req = new SUPERRequest(text);
 
-                if(req.getRequestType() == 0){
-                    writer.println(handler.get(req.getRequestBody()));
-                } else if (req.getRequestType() == 1){
-                    writer.println(handler.post(req.getRequestBody()));
-                }
+                SUPEREndpoint endPoint = endPoints.get(req.getEndPointName());
 
-                socket.close();
+                if(endPoint == null){
+                    writer.println("3;Endpoint not found");
+                    continue;
+                }
+                
+                int requestType = req.getRequestType();
+
+                switch (requestType){
+                    case 0:
+                        writer.println(endPoint.get(req.getRequestBody()));     
+                    case 1:
+                        writer.println(endPoint.post(req.getRequestBody()));
+                    default:
+                        writer.println("3;Invalid request type (must be 0 or 1)");
+                }
+                //socket.close();
             }
- 
         } catch (IOException ex) {
             System.out.println("Server exception: " + ex.getMessage());
             ex.printStackTrace();
         }
     }
 
-    public void addHandler(SUPERHandler handler){
-        this.handler = handler;
+    public void addEndpoint(String endPointName, SUPEREndpoint handler){
+        this.endPoints.put(endPointName, handler);
     }
 }
