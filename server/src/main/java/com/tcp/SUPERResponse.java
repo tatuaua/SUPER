@@ -19,7 +19,6 @@ public class SUPERResponse {
         }
 
         result = Integer.parseInt(split[0]);
-
         responseBody = split[1];
     }
 

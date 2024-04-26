@@ -30,11 +30,16 @@ public class SUPERServer {
  
                 String text = reader.readLine();
 
-                SUPERRequest req = new SUPERRequest(text);
+                SUPERRequest req = new SUPERRequest();
 
-                SUPEREndpoint endPoint = endPoints.get(req.getEndPointName());
+                if(!req.parse(text)){
+                    writer.println("3;Invalid request");
+                    continue;
+                }
 
-                if(endPoint == null){
+                SUPEREndpoint endpoint = endPoints.get(req.getEndpointName());
+
+                if(endpoint == null){
                     writer.println("3;Endpoint not found");
                     continue;
                 }
@@ -43,9 +48,9 @@ public class SUPERServer {
 
                 switch (requestType){
                     case 0:
-                        writer.println(endPoint.get());     
+                        writer.println(endpoint.get());     
                     case 1:
-                        writer.println(endPoint.post(req.getRequestBody()).toString());
+                        writer.println(endpoint.post(req.getRequestBody()).toString());
                     default:
                         writer.println("3;Invalid request type (must be 0 or 1)");
                 }

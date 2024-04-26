@@ -19,7 +19,7 @@ public class Client {
             PrintWriter writer = new PrintWriter(output, true);
 
             String text;
-            text = "/banana;1;correct";
+            text = "bananas;0;another";
             writer.println(text);
 
             InputStream input = socket.getInputStream();
