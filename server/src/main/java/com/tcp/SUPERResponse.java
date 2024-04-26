@@ -5,12 +5,13 @@ public class SUPERResponse {
     private int result = -1;
     private String responseBody;
 
+    public SUPERResponse(){}
+
     public SUPERResponse(String text){
         parse(text);
     }
 
     public void parse(String responseContent){
-
         String[] split = responseContent.split(";");
 
         if(!split[0].equals("2") && !split[0].equals("3") && !split[0].equals("-1")){
@@ -30,8 +31,13 @@ public class SUPERResponse {
         return responseBody;
     }
 
+    public String raw(){
+        return "" + getResponseType() + ";" + getResponseBody();
+    }
+
     @Override
     public String toString(){
-        return "" + getResponseType() + ";" + getResponseBody();
+        String status = this.getResponseType() == 2 ? "successful" : "failed";
+        return "Request " + status + "\nResponse body: " + this.getResponseBody();
     }
 }

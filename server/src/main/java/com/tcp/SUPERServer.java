@@ -48,11 +48,14 @@ public class SUPERServer {
 
                 switch (requestType){
                     case 0:
-                        writer.println(endpoint.get());     
+                        writer.println(endpoint.get().raw());
+                        break;     
                     case 1:
-                        writer.println(endpoint.post(req.getRequestBody()).toString());
+                        writer.println(endpoint.post(req.getRequestBody()).raw());
+                        break;
                     default:
                         writer.println("3;Invalid request type (must be 0 or 1)");
+                        break;
                 }
             }
         } catch (IOException ex) {

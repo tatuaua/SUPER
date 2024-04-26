@@ -6,7 +6,10 @@ public class SUPERRequest {
     private int requestType = -1;
     private String requestBody;
 
-    public boolean parse(String requestContent){//TODO: handle bad requests
+    /** Parses a raw string into a SUPERRequest. 
+     * @return Whether the raw string was a valid SUPERRequest
+    */
+    public boolean parse(String requestContent){
         if (requestContent == null || requestContent.isEmpty()) {
             return false;
         }
@@ -35,6 +38,26 @@ public class SUPERRequest {
         }
     }
 
+    /** Builds a request from the given parameters. Using this ensures a valid SUPERRequest is sent.
+     * @param endpoint The endpoint on the server to make the request to
+     * @param requestType The type of request, 0 or 1
+     * @param requestBody The body of the request
+    */
+    public boolean build(String endpoint, int requestType, String requestBody){
+        if(endpoint == null){return false;}
+        if(requestType != 0 && requestType != 1){return false;}
+        if(requestType == 1 && requestBody == null){return false;}
+
+        // If its a get request and the body is null, just replace with empty str
+        if(requestBody == null){requestBody = "";}
+
+        this.endpointName = endpoint;
+        this.requestType = requestType;
+        this.requestBody = requestBody;
+
+        return true;
+    }
+
     public String getEndpointName(){
         return endpointName;
     }
@@ -45,5 +68,10 @@ public class SUPERRequest {
 
     public String getRequestBody(){
         return requestBody;
+    }
+
+    /** Returns a raw string representation of the request eg. ENDPOINT;TYPE;BODY */
+    public String raw(){
+        return this.getEndpointName() + ";" + this.getRequestType() + ";" + this.getRequestBody();
     }
 }
