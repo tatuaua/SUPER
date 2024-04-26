@@ -12,7 +12,7 @@ public class Client {
         client.connect(hostname, port);
 
         SUPERRequest req = new SUPERRequest();
-        req.build("bananas", 1, null);
+        req.build("bananas", 0, "123312");
 
         SUPERResponse response = new SUPERResponse();
         try {
