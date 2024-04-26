@@ -19,7 +19,7 @@ public class Client {
             PrintWriter writer = new PrintWriter(output, true);
 
             String text;
-            text = "/cars;0;";
+            text = "/banana;1;correct";
             writer.println(text);
 
             InputStream input = socket.getInputStream();
@@ -29,7 +29,7 @@ public class Client {
 
             SUPERResponse sResponse = new SUPERResponse(response);
             System.out.println("Response code: " + sResponse.getResponseType());
-            System.out.println("Response body: " + new String(sResponse.getResponseBody()));
+            System.out.println("Response body: " + sResponse.getResponseBody());
 
             socket.close();
 

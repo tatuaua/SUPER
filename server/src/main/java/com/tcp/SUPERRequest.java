@@ -10,7 +10,8 @@ public class SUPERRequest {
         parse(requestContent);
     }
 
-    public void parse(String requestContent){
+    public void parse(String requestContent){//TODO: handle bad requests
+
         String[] split = requestContent.split(";");
 
         endPointName = split[0];
@@ -21,7 +22,11 @@ public class SUPERRequest {
 
         requestType = Integer.parseInt(split[1]);
 
-        requestBody = split[2];
+        if(requestType == 0){
+            requestBody = "";
+        } else {
+            requestBody = split[2];
+        }
     }
 
     public String getEndPointName(){

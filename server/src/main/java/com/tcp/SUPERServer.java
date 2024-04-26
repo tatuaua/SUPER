@@ -43,13 +43,12 @@ public class SUPERServer {
 
                 switch (requestType){
                     case 0:
-                        writer.println(endPoint.get(req.getRequestBody()));     
+                        writer.println(endPoint.get());     
                     case 1:
-                        writer.println(endPoint.post(req.getRequestBody()));
+                        writer.println(endPoint.post(req.getRequestBody()).toString());
                     default:
                         writer.println("3;Invalid request type (must be 0 or 1)");
                 }
-                //socket.close();
             }
         } catch (IOException ex) {
             System.out.println("Server exception: " + ex.getMessage());

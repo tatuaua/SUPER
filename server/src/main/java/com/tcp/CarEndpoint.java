@@ -1,9 +1,10 @@
 package com.tcp;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
-public class CarEndpoint implements SUPEREndpoint{
+public class CarEndpoint /*implements SUPEREndpoint*/{
 
+    /* 
     ArrayList<String> cars;
 
     CarEndpoint(){
@@ -19,6 +20,6 @@ public class CarEndpoint implements SUPEREndpoint{
     public String post(String requestContent) {
         cars.add(requestContent);
         return "2;Cars posted";
-    }
+    }*/
     
 }

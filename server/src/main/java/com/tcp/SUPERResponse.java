@@ -30,4 +30,9 @@ public class SUPERResponse {
     public String getResponseBody(){
         return responseBody;
     }
+
+    @Override
+    public String toString(){
+        return "" + getResponseType() + ";" + getResponseBody();
+    }
 }
