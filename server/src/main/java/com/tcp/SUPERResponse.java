@@ -23,6 +23,19 @@ public class SUPERResponse {
         responseBody = split[1];
     }
 
+    public void build(int result, String responseBody){
+        if(result != 2 && result != 3){
+            return;
+        }
+
+        if(responseBody == null){
+            return;
+        }
+
+        this.result = result;
+        this.responseBody = responseBody;
+    }
+
     public int getResponseType(){
         return result;
     }

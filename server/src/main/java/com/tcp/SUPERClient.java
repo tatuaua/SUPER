@@ -17,9 +17,11 @@ public class SUPERClient {
         try {
             socket = new Socket(address, port);
         } catch (UnknownHostException ex) {
-            System.out.println("Server not found: " + ex.getMessage());
+            ex.printStackTrace();
+            return false;
         } catch (IOException ex) {
-            System.out.println("I/O error: " + ex.getMessage());
+            ex.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -34,14 +36,8 @@ public class SUPERClient {
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
         String responseString = reader.readLine();
-
         socket.close();
-
-        System.out.println("resp str: " + responseString);
-
         SUPERResponse response = new SUPERResponse(responseString);
-
         return response;
     }
-    
 }

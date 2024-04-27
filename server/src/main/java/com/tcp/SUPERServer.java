@@ -19,33 +19,29 @@ public class SUPERServer {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server is listening on port " + port);
 
-            while (true) {
+            while (true) {           
                 Socket socket = serverSocket.accept();
- 
+                
                 InputStream input = socket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
- 
+            
                 OutputStream output = socket.getOutputStream();
                 PrintWriter writer = new PrintWriter(output, true);
- 
+            
                 String text = reader.readLine();
-
                 SUPERRequest req = new SUPERRequest();
-
                 if(!req.parse(text)){
                     writer.println("3;Invalid request");
                     continue;
                 }
-
+            
                 SUPEREndpoint endpoint = endPoints.get(req.getEndpointName());
-
                 if(endpoint == null){
                     writer.println("3;Endpoint not found");
                     continue;
                 }
                 
                 int requestType = req.getRequestType();
-
                 switch (requestType){
                     case 0:
                         writer.println(endpoint.get().raw());

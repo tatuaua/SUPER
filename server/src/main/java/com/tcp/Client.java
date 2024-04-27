@@ -12,15 +12,14 @@ public class Client {
         client.connect(hostname, port);
 
         SUPERRequest req = new SUPERRequest();
-        req.build("bananas", 0, "123312");
+        req.build("/", 0, null);
 
         SUPERResponse response = new SUPERResponse();
+
         try {
             response = client.makeRequest(req);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println(response);
     }
 }
