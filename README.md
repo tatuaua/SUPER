@@ -45,7 +45,9 @@ public SUPERResponse get() {
 
 @Override
 public SUPERResponse post(String requestBody) {
-    return new SUPERResponse("");
+    SUPERResponse resp = new SUPERResponse();
+    resp.build(3, "You cant post here!");
+    return resp;
 }
 ```
 
