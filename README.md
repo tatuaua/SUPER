@@ -53,6 +53,8 @@ All SUPER endpoints have to return a SUPER response.
 
 ### Making client-side requests to a SUPER server
 
+Get request:
+
 ```java
 String hostname = "localhost";
 int port = 5002;
@@ -62,6 +64,7 @@ SUPERClient client = new SUPERClient();
 client.connect(hostname, port);
 
 SUPERRequest req = new SUPERRequest();
+// SUPER has no concept of headers, implement them yourself!
 req.build("/", 0, null);
 
 SUPERResponse response = new SUPERResponse();
@@ -73,7 +76,38 @@ try {
 }
 ```
 
-A request is made using the makeRequest function of a SUPER client.
+Post request:
+
+```java
+String hostname = "localhost";
+int port = 5002;
+
+SUPERClient client = new SUPERClient();
+
+client.connect(hostname, port);
+
+SUPERRequest req = new SUPERRequest();
+req.build("/", 1, "Post request body");
+
+SUPERResponse response = new SUPERResponse();
+
+try {
+    response = client.makeRequest(req);
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+SUPER only supports get and post requests. Everything else is pointless.
+
+SUPER request types:
+- 0 == Get
+- 1 == Post
+
+SUPER response types:
+- 2 == Success
+- 3 == Failure
+
 
 ## Contributing
 
