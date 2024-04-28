@@ -21,7 +21,28 @@ public class SUPERServer {
 
             while (true) {           
                 Socket socket = serverSocket.accept();
-                
+                new ServerThread(socket).start();
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Server exception: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    public void addEndpoint(String endPointName, SUPEREndpoint handler){
+        this.endPoints.put(endPointName, handler);
+    }
+
+    class ServerThread extends Thread {
+        private Socket socket;
+     
+        public ServerThread(Socket socket) {
+            this.socket = socket;
+        }
+     
+        public void run() {
+            try {
                 InputStream input = socket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             
@@ -32,13 +53,11 @@ public class SUPERServer {
                 SUPERRequest req = new SUPERRequest();
                 if(!req.parse(text)){
                     writer.println("3;Invalid request");
-                    continue;
                 }
             
                 SUPEREndpoint endpoint = endPoints.get(req.getEndpointName());
                 if(endpoint == null){
                     writer.println("3;Endpoint not found");
-                    continue;
                 }
                 
                 int requestType = req.getRequestType();
@@ -53,14 +72,10 @@ public class SUPERServer {
                         writer.println("3;Invalid request type (must be 0 or 1)");
                         break;
                 }
+            } catch (IOException ex) {
+                System.out.println("Server exception: " + ex.getMessage());
+                ex.printStackTrace();
             }
-        } catch (IOException ex) {
-            System.out.println("Server exception: " + ex.getMessage());
-            ex.printStackTrace();
         }
-    }
-
-    public void addEndpoint(String endPointName, SUPEREndpoint handler){
-        this.endPoints.put(endPointName, handler);
     }
 }
