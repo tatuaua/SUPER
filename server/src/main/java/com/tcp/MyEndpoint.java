@@ -11,6 +11,8 @@ public class MyEndpoint implements SUPEREndpoint {
 
     @Override
     public SUPERResponse post(String requestBody) {
-        return new SUPERResponse("");
+        SUPERResponse resp = new SUPERResponse();
+        resp.build(2, "Posted!");
+        return resp;
     }
 }
