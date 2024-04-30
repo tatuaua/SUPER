@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Client {
-    public static void main(String[] args) {
-        String input = new String(generateRandomChars(500000));
-
+    public static void main(String[] args) throws Exception {
         String hostname = "localhost";
         int port = 5002;
 
@@ -15,7 +13,7 @@ public class Client {
         client.connect(hostname, port);
 
         SUPERRequest req = new SUPERRequest();
-        req.build("/", 1, input);
+        req.build("/", 1, "From cleint");
 
         SUPERResponse response = new SUPERResponse();
 

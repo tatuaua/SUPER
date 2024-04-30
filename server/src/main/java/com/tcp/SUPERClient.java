@@ -2,15 +2,15 @@ package com.tcp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.security.PublicKey;
 
 public class SUPERClient {
 
@@ -32,18 +32,29 @@ public class SUPERClient {
         return true;
     }
 
-    public SUPERResponse makeRequest(SUPERRequest request) throws IOException{
-        OutputStream output = socket.getOutputStream();
-        PrintWriter writer = new PrintWriter(output, true);
+    public SUPERResponse makeRequest(SUPERRequest request) throws Exception{
+        System.out.println("Getting key");
 
-        writer.println(request.raw());
-
-        InputStream input = socket.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-
-        String responseString = reader.readLine();
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+        
+        PublicKey publicKey = (PublicKey) in.readObject();
+        
+        System.out.println("Public key received");
+        
+        SUPEREncryption encryption = new SUPEREncryption(publicKey);
+        byte[] encryptedMessage = encryption.encrypt(request.raw());
+        
+        out.writeObject(encryptedMessage);
+        
+        System.out.println("Encrypted sent");
+        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        SUPERResponse response = new SUPERResponse(reader.readLine());
+        
+        System.out.println("Response read");
+        
         socket.close();
-        SUPERResponse response = new SUPERResponse(responseString);
         return response;
     }
 }

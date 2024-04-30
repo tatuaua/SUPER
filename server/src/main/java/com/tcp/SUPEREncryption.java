@@ -4,82 +4,42 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.util.Scanner;
 
 import javax.crypto.Cipher;
-import javax.xml.bind.DatatypeConverter;
 
 public class SUPEREncryption {
-	private static final String RSA
-		= "RSA";
+    private PrivateKey privateKey;
+    private PublicKey publicKey;
 
-	public static KeyPair generateRSAKeyPair()
-		throws Exception
-	{
-		SecureRandom secureRandom = new SecureRandom();
-		KeyPairGenerator keyPairGenerator
-			= KeyPairGenerator.getInstance(RSA);
+    public SUPEREncryption() throws Exception {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(2048);
+        KeyPair pair = keyGen.generateKeyPair();
+        this.privateKey = pair.getPrivate();
+        this.publicKey = pair.getPublic();
+    }
 
-		keyPairGenerator.initialize(
-			2048, secureRandom);
-		return keyPairGenerator
-			.generateKeyPair();
+	public SUPEREncryption(PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public byte[] encrypt(String message) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.ENCRYPT_MODE, this.publicKey);
+        return cipher.doFinal(message.getBytes());
+    }
+
+    public String decrypt(byte[] encryptedMessage) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
+        return new String(cipher.doFinal(encryptedMessage));
+    }
+
+	public PrivateKey getPrivateKey(){
+		return this.privateKey;
 	}
 
-	public static byte[] do_RSAEncryption(
-		String plainText,
-		PrivateKey privateKey)
-		throws Exception
-	{
-		Cipher cipher = Cipher.getInstance(RSA);
-		cipher.init(Cipher.ENCRYPT_MODE, privateKey);
-		return cipher.doFinal(
-			plainText.getBytes());
-	}
-
-	public static String do_RSADecryption(
-		byte[] cipherText,
-		PublicKey publicKey)
-		throws Exception
-	{
-		Cipher cipher
-			= Cipher.getInstance(RSA);
-
-		cipher.init(Cipher.DECRYPT_MODE,
-					publicKey);
-		byte[] result
-			= cipher.doFinal(cipherText);
-
-		return new String(result);
-	}
-
-	public static void main(String args[])
-			throws Exception {
-		KeyPair keypair = generateRSAKeyPair();
-
-		String plainText = "This is the PlainText " + "I want to Encrypt using RSA.";
-
-		byte[] cipherText = do_RSAEncryption(plainText, keypair.getPrivate());
-
-		System.out.println("The Public Key is: "
-						+ DatatypeConverter.printHexBinary(keypair.getPublic().getEncoded()));
-
-		System.out.println("The Private Key is: "
-						+ DatatypeConverter.printHexBinary(keypair.getPrivate().getEncoded()));
-
-		System.out.print("The Encrypted Text is: ");
-
-		System.out.println(
-				DatatypeConverter.printHexBinary(
-						cipherText));
-
-		String decryptedText = do_RSADecryption(
-				cipherText,
-				keypair.getPublic());
-
-		System.out.println(
-				"The decrypted text is: "
-						+ decryptedText);
+	public PublicKey getPublicKey(){
+		return this.publicKey;
 	}
 }
