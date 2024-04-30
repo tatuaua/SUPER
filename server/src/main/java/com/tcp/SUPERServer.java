@@ -8,6 +8,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.security.PublicKey;
+import java.util.Base64;
 import java.util.HashMap;
 
 public class SUPERServer {
@@ -48,6 +51,15 @@ public class SUPERServer {
             
                 OutputStream output = socket.getOutputStream();
                 PrintWriter writer = new PrintWriter(output, true);
+
+                /*KeyPair serverKeyPair = SUPEREncryption.generateRSAKeyPair();
+
+                String serverPublicKeyStr = Base64.getEncoder().encodeToString(serverKeyPair.getPublic().getEncoded());
+                writer.println(serverPublicKeyStr);
+
+                String clientPublicKeyStr = reader.readLine();
+                byte[] clientPublicKeyBytes = Base64.getDecoder().decode(clientPublicKeyStr);
+                PublicKey clientPublicKey = SUPEREncryption.getPublicKeyFromBytes(clientPublicKeyBytes);*/
             
                 String text = reader.readLine();
                 SUPERRequest req = new SUPERRequest();

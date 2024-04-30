@@ -20,6 +20,8 @@ public class SUPERRequest {
             return false;
         }
 
+        //SUPEREncryption enc = new SUPEREncryption();
+
         try {
             int type = Integer.parseInt(split[1].trim());
             
