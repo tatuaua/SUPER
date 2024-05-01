@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Base64;
 import java.util.HashMap;
 
 public class SUPERServer {
@@ -59,6 +60,9 @@ public class SUPERServer {
                 if(endpoint == null){
                     writer.println("3;Endpoint not found");
                 }
+
+                byte[] decodedBodyBytes = Base64.getDecoder().decode(req.getRequestBody());
+                String decodedBody = new String(decodedBodyBytes);
                 
                 int requestType = req.getRequestType();
                 switch (requestType){
@@ -66,7 +70,7 @@ public class SUPERServer {
                         writer.println(endpoint.get().raw());
                         break;     
                     case 1:
-                        writer.println(endpoint.post(req.getRequestBody()).raw());
+                        writer.println(endpoint.post(decodedBody).raw());
                         break;
                     default:
                         writer.println("3;Invalid request type (must be 0 or 1)");

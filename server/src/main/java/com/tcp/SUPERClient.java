@@ -9,6 +9,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.Base64;
 
 public class SUPERClient {
 
@@ -32,7 +33,8 @@ public class SUPERClient {
 
     public SUPERResponse makeRequest(SUPERRequest request) throws Exception{
         PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-        writer.println(request.raw());
+        String encodedString = Base64.getEncoder().encodeToString(request.getRequestBody().getBytes());
+        writer.println(request.getEndpointName() + ";" + request.getRequestType() + ";" + encodedString);
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         String responseString = reader.readLine();
         socket.close();
