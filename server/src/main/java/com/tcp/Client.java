@@ -1,7 +1,7 @@
 package com.tcp;
 
 import java.io.IOException;
-import java.util.Random;
+//import java.util.Random;
 
 public class Client {
     public static void main(String[] args) throws Exception {
@@ -23,11 +23,12 @@ public class Client {
             e.printStackTrace();
         }
 
+        System.out.println("Response: ");
         System.out.println(response.getResponseBody());
     }
 
 
-    public static char[] generateRandomChars(int numChars) {
+    /*public static char[] generateRandomChars(int numChars) {
         Random random = new Random();
         char[] allowedChars = getAllowedCharacters();
         char[] randomChars = new char[numChars];
@@ -47,5 +48,5 @@ public class Client {
             }
         }
         return stringBuilder.toString().toCharArray();
-    }
+    }*/
 }

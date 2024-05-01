@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -46,19 +43,13 @@ public class SUPERServer {
      
         public void run() {
             try {
-                SUPEREncryption encryption = new SUPEREncryption();
-    
-                ObjectOutputStream objOutput = new ObjectOutputStream(socket.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                
-                objOutput.writeObject(encryption.getPublicKey());
-                objOutput.flush();
-                
-                byte[] encryptedMessage = (byte[]) in.readObject();
-                String text = encryption.decrypt(encryptedMessage);
-                
-                PrintWriter writer = new PrintWriter(socket.getOutputStream(), true); 
-
+                InputStream input = socket.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            
+                OutputStream output = socket.getOutputStream();
+                PrintWriter writer = new PrintWriter(output, true);
+            
+                String text = reader.readLine();
                 SUPERRequest req = new SUPERRequest();
                 if(!req.parse(text)){
                     writer.println("3;Invalid request");
