@@ -36,6 +36,7 @@ This starts a server on port 5002 and includes a base endpoint.
 
 ```java
 public class MyEndpoint implements SUPEREndpoint {
+
 @Override
 public SUPERResponse get() {
     SUPERResponse resp = new SUPERResponse();
@@ -69,6 +70,9 @@ SUPERRequest req = new SUPERRequest();
 // SUPER has no concept of headers, implement them yourself!
 req.build("/", 0, null);
 
+// This is what the raw request looks like:
+// "/;0"
+
 SUPERResponse response = new SUPERResponse();
 
 try {
@@ -90,6 +94,9 @@ client.connect(hostname, port);
 
 SUPERRequest req = new SUPERRequest();
 req.build("/", 1, "Post request body");
+
+// This is what the raw request looks like:
+// "/;1;Post request body"
 
 SUPERResponse response = new SUPERResponse();
 
