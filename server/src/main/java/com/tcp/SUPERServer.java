@@ -54,11 +54,15 @@ public class SUPERServer {
                 SUPERRequest req = new SUPERRequest();
                 if(!req.parse(text)){
                     writer.println("3;Invalid request");
+                    socket.close();
+                    return;
                 }
             
                 SUPEREndpoint endpoint = endPoints.get(req.getEndpointName());
                 if(endpoint == null){
                     writer.println("3;Endpoint not found");
+                    socket.close();
+                    return;
                 }
 
                 byte[] decodedBodyBytes = Base64.getDecoder().decode(req.getRequestBody());
@@ -76,6 +80,7 @@ public class SUPERServer {
                         writer.println("3;Invalid request type (must be 0 or 1)");
                         break;
                 }
+                socket.close();
             } catch (Exception ex) {
                 System.out.println("Server exception: " + ex.getMessage());
                 ex.printStackTrace();
