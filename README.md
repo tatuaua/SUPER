@@ -94,6 +94,7 @@ SUPER response types:
 - 2 == Success
 - 3 == Failure
 
+All security and safety features have been stripped from SUPER for performance reasons (not laziness). The only processing done is encoding the request body to avoid breaking the server with special character (e.g. semicolon).
 
 ## Contributing
 
