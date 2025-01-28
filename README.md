@@ -1,6 +1,6 @@
 # SUPER
 
-Nobody asked for it, nobody needs it, here it is. SUPER is a simple TCP wrapper library and a protocol.
+Nobody asked for it, nobody needs it, here it is. SUPER is a simple UDP wrapper library and a protocol.
 
 ## Table of Contents
 - [Usage](#usage)
@@ -26,7 +26,7 @@ TODO
 
 ```java
 SUPERServer server = new SUPERServer();
-server.addEndpoint("/", new MyEndpoint());
+server.addEndpoint("/", new Endpoint());
 server.open(5002);
 ```
 
@@ -35,20 +35,22 @@ This starts a server on port 5002 and includes a base endpoint.
 ### Definining a SUPER endpoint
 
 ```java
-public class MyEndpoint implements SUPEREndpoint {
+public class Endpoint implements SUPEREndpoint {
 
-@Override
-public SUPERResponse get() {
-    SUPERResponse resp = new SUPERResponse();
-    resp.build(2, "Hello from SUPERServer");
-    return resp;
-}
+    @Override
+    public SUPERResponse get() {
+        SUPERResponse resp = new SUPERResponse();
+        resp.build(2, "Hello from SUPERServer");
+        return resp;
+    }
 
-@Override
-public SUPERResponse post(String requestBody) {
-    SUPERResponse resp = new SUPERResponse();
-    resp.build(3, "You cant post here!");
-    return resp;
+    @Override
+    public SUPERResponse post(String requestBody) {
+        SUPERResponse resp = new SUPERResponse();
+        resp.build(3, "You cant post here!");
+        return resp;
+    }
+
 }
 ```
 
@@ -59,52 +61,27 @@ All SUPER endpoints have to return a SUPER response.
 Get request:
 
 ```java
-String hostname = "localhost";
-int port = 5002;
-
 SUPERClient client = new SUPERClient();
-
-client.connect(hostname, port);
-
+client.connect("localhost", 5002);
 SUPERRequest req = new SUPERRequest();
-// SUPER has no concept of headers, implement them yourself!
 req.build("/", 0, null);
+SUPERResponse response = client.makeRequest(req);
 
-// This is what the raw request looks like:
-// "/;0"
-
-SUPERResponse response = new SUPERResponse();
-
-try {
-    response = client.makeRequest(req);
-} catch (IOException e) {
-    e.printStackTrace();
-}
+System.out.println("Response: ");
+System.out.println(response.getResponseBody());
 ```
 
 Post request:
 
 ```java
-String hostname = "localhost";
-int port = 5002;
-
 SUPERClient client = new SUPERClient();
-
-client.connect(hostname, port);
-
+client.connect("localhost", 5002);
 SUPERRequest req = new SUPERRequest();
-req.build("/", 1, "Post request body");
+req.build("/", 1, "Some body");
+SUPERResponse response = client.makeRequest(req);
 
-// This is what the raw request looks like:
-// "/;1;Post request body"
-
-SUPERResponse response = new SUPERResponse();
-
-try {
-    response = client.makeRequest(req);
-} catch (IOException e) {
-    e.printStackTrace();
-}
+System.out.println("Response: ");
+System.out.println(response.getResponseBody());
 ```
 
 SUPER only supports get and post requests. Everything else is pointless.

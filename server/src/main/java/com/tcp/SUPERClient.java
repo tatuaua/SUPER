@@ -1,44 +1,56 @@
 package com.tcp;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
 import java.util.Base64;
 
 public class SUPERClient {
 
-    Socket socket;
+    private DatagramSocket socket;
+    private InetAddress serverAddress;
+    private int serverPort;
 
-    public boolean connect(String address, int port){
+    public boolean connect(String address, int port) {
         try {
-            socket = new Socket();
-            InetAddress addr = InetAddress.getByName(address);
-            SocketAddress sockaddr = new InetSocketAddress(addr, port);
-            socket.connect(sockaddr);
-        } catch (UnknownHostException ex) {
-            ex.printStackTrace();
-            return false;
-        } catch (IOException ex) {
+            socket = new DatagramSocket();
+            serverAddress = InetAddress.getByName(address);
+            serverPort = port;
+        } catch (Exception ex) {
             ex.printStackTrace();
             return false;
         }
         return true;
     }
 
-    public SUPERResponse makeRequest(SUPERRequest request) throws Exception{
-        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-        String encodedString = Base64.getEncoder().encodeToString(request.getRequestBody().getBytes());
-        writer.println(request.getEndpointName() + ";" + request.getRequestType() + ";" + encodedString);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String responseString = reader.readLine();
-        socket.close();
-        SUPERResponse response = new SUPERResponse(responseString);
-        return response;
+    public SUPERResponse makeRequest(SUPERRequest request) throws Exception {
+        try {
+            // Prepare the request message
+            String encodedString = Base64.getEncoder().encodeToString(request.getRequestBody().getBytes());
+            String requestString = request.getEndpointName() + ";" + request.getRequestType() + ";" + encodedString;
+            byte[] requestBytes = requestString.getBytes();
+
+            if(requestBytes.length > 1024) {
+                throw new Exception("Request is too large");
+            }
+
+            // Send the request to the server
+            DatagramPacket requestPacket = new DatagramPacket(requestBytes, requestBytes.length, serverAddress, serverPort);
+            socket.send(requestPacket);
+
+            // Prepare to receive the response
+            byte[] buffer = new byte[1024];
+            DatagramPacket responsePacket = new DatagramPacket(buffer, buffer.length);
+            socket.receive(responsePacket);
+
+            // Decode the response
+            String responseString = new String(responsePacket.getData(), 0, responsePacket.getLength());
+            return new SUPERResponse(responseString);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Error making request", ex);
+        } finally {
+            socket.close();
+        }
     }
 }

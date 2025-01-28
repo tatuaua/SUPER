@@ -1,6 +1,9 @@
-package com.tcp;
+package com.tcp.example;
 
-public class MyEndpoint implements SUPEREndpoint {
+import com.tcp.SUPEREndpoint;
+import com.tcp.SUPERResponse;
+
+public class Endpoint implements SUPEREndpoint {
 
     @Override
     public SUPERResponse get() {
@@ -11,9 +14,9 @@ public class MyEndpoint implements SUPEREndpoint {
 
     @Override
     public SUPERResponse post(String requestBody) {
-        System.out.println("Endpoint got: " + requestBody);
         SUPERResponse resp = new SUPERResponse();
-        resp.build(2, "Posted!");
+        resp.build(3, "You cant post here!");
         return resp;
     }
+
 }
